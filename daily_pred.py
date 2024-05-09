@@ -1,5 +1,8 @@
 import daily_opt as dopt
 import pandas as pd
+import time
+
+start_time = time.time()
 
 p_l = dopt.load_data("C:\\Codes\\Projects\\Demand_management_verify\\Data\\xr_12_filtered.csv")
 
@@ -60,3 +63,6 @@ print("Cost:", cost)
 is_valley = [True if (i>=36 and i<=48) or (i>=68 and i<=76) or (i>=80 and i<=88) else False for i in range(num_periods)]
 print("Original cost:", grid_cost(p_l, is_valley))
 print("Now cost:", grid_cost(p_l+solution['P_CS'], is_valley))
+
+stop_time = time.time()
+print("Time elapsed:", stop_time - start_time)

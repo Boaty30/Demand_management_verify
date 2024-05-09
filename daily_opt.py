@@ -131,12 +131,12 @@ def solve_problem(file_path, s_n, alpha, delta_t, output_file, p_f_max=4750, fig
         # 解决问题
         prob.solve()
 
-        # 输出结果
-        print("Solution status = ", prob.solution.get_status(), ":", prob.solution.status[prob.solution.get_status()])
-        print("Solution value  = ", prob.solution.get_objective_value())
-        for t in range(num_periods):
-            print(f"P_CS_{t} = {prob.solution.get_values(f'P_CS_{t}'): .2f}")
-            print(f"S_{t} = {prob.solution.get_values(f'S_{t}'): .2f}")
+        # # 输出结果
+        # print("Solution status = ", prob.solution.get_status(), ":", prob.solution.status[prob.solution.get_status()])
+        # print("Solution value  = ", prob.solution.get_objective_value())
+        # for t in range(num_periods):
+        #     print(f"P_CS_{t} = {prob.solution.get_values(f'P_CS_{t}'): .2f}")
+        #     print(f"S_{t} = {prob.solution.get_values(f'S_{t}'): .2f}")
 
         # 创建一个空的 DataFrame 来存储结果
         solution_df = pd.DataFrame(columns=['P_CS', 'S'])
@@ -148,49 +148,51 @@ def solve_problem(file_path, s_n, alpha, delta_t, output_file, p_f_max=4750, fig
         # 将结果保存到 CSV 文件中
         solution_df.to_csv(output_file, index=False)
 
-        time_labels = generate_time_labels(num_periods)
-        # 指定字体路径
-        font_path = 'C:/Windows/Fonts/msyh.ttc'  # 微软雅黑字体路径，根据实际情况修改
-        plt.rcParams['font.family'] = ['sans-serif']
-        plt.rcParams['font.sans-serif'] = [FontProperties(fname=font_path).get_name()]
-        plt.rcParams['axes.unicode_minus'] = False  # 解决负号'-'显示为方块的问题
+        # time_labels = generate_time_labels(num_periods)
+        # # 指定字体路径
+        # font_path = 'C:/Windows/Fonts/msyh.ttc'  # 微软雅黑字体路径，根据实际情况修改
+        # plt.rcParams['font.family'] = ['sans-serif']
+        # plt.rcParams['font.sans-serif'] = [FontProperties(fname=font_path).get_name()]
+        # plt.rcParams['axes.unicode_minus'] = False  # 解决负号'-'显示为方块的问题
 
-        fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(20, 6))
+        # fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(20, 6))
 
-        # 第一个子图：功率曲线
-        ax1.plot(time_labels, p_l, label='电网侧优化前功率')
-        ax1.plot(time_labels, solution_df['P_CS'], label='储能运行功率')
-        ax1.plot(time_labels, solution_df['P_CS'] + p_l, label='电网侧实际功率')
-        ax1.axhline(y=p_f_max, color='r', linestyle='--', label=f'需量控制阈值={p_f_max:.2f} kW', lw=0.7, alpha=0.7)
-        ax1.xaxis.set_major_locator(mdates.HourLocator(interval=1))  # 每1小时标记一次
-        ax1.xaxis.set_major_formatter(mdates.DateFormatter('%H:%M'))  # 格式化时间标签为小时:分钟
-        ax1.set_xlabel('时刻')
-        ax1.set_ylabel('功率 (kW)')
-        ax1.set_title('功率曲线')
-        ax1.legend()
-        ax1.grid(True)
-        ax1.xaxis.set_major_locator(mdates.HourLocator(interval=1))
-        ax1.xaxis.set_major_formatter(mdates.DateFormatter('%H:%M'))
-        ax1.tick_params(axis='x', rotation=45)  # 设置横坐标标签旋转45度
+        # # 第一个子图：功率曲线
+        # ax1.plot(time_labels, p_l, label='电网侧优化前功率')
+        # ax1.plot(time_labels, solution_df['P_CS'], label='储能运行功率')
+        # ax1.plot(time_labels, solution_df['P_CS'] + p_l, label='电网侧实际功率')
+        # ax1.axhline(y=p_f_max, color='r', linestyle='--', label=f'需量控制阈值={p_f_max:.2f} kW', lw=0.7, alpha=0.7)
+        # ax1.fill_between(time_labels, p_l, solution_df['P_CS'] + p_l, where=(p_l >= solution_df['P_CS'] + p_l), facecolor='red', alpha=0.3, label='削峰')
+        # ax1.fill_between(time_labels, p_l, solution_df['P_CS'] + p_l, where=(p_l <= solution_df['P_CS'] + p_l), facecolor='green', alpha=0.3, label='填谷')
+        # ax1.xaxis.set_major_locator(mdates.HourLocator(interval=1))  # 每1小时标记一次
+        # ax1.xaxis.set_major_formatter(mdates.DateFormatter('%H:%M'))  # 格式化时间标签为小时:分钟
+        # ax1.set_xlabel('时刻')
+        # ax1.set_ylabel('功率 (kW)')
+        # ax1.set_title('功率曲线')
+        # ax1.legend()
+        # ax1.grid(True)
+        # ax1.xaxis.set_major_locator(mdates.HourLocator(interval=1))
+        # ax1.xaxis.set_major_formatter(mdates.DateFormatter('%H:%M'))
+        # ax1.tick_params(axis='x', rotation=45)  # 设置横坐标标签旋转45度
 
-        # 第二个子图：储能电量曲线
-        ax2.plot(time_labels, solution_df['S'], label='储能电量')
-        ax2.xaxis.set_major_locator(mdates.HourLocator(interval=1))
-        ax2.xaxis.set_major_formatter(mdates.DateFormatter('%H:%M'))
-        ax2.set_xlabel('时刻')
-        ax2.set_ylabel('储能电量 (kWh)')
-        ax2.set_title('储能电量曲线')
-        ax2.legend()
-        ax2.grid(True)
-        ax2.xaxis.set_major_locator(mdates.HourLocator(interval=1))
-        ax2.xaxis.set_major_formatter(mdates.DateFormatter('%H:%M'))
-        ax2.tick_params(axis='x', rotation=45)  # 设置横坐标标签旋转45度
+        # # 第二个子图：储能电量曲线
+        # ax2.plot(time_labels, solution_df['S'], label='储能电量')
+        # ax2.xaxis.set_major_locator(mdates.HourLocator(interval=1))
+        # ax2.xaxis.set_major_formatter(mdates.DateFormatter('%H:%M'))
+        # ax2.set_xlabel('时刻')
+        # ax2.set_ylabel('储能电量 (kWh)')
+        # ax2.set_title('储能电量曲线')
+        # ax2.legend()
+        # ax2.grid(True)
+        # ax2.xaxis.set_major_locator(mdates.HourLocator(interval=1))
+        # ax2.xaxis.set_major_formatter(mdates.DateFormatter('%H:%M'))
+        # ax2.tick_params(axis='x', rotation=45)  # 设置横坐标标签旋转45度
 
-        # 调整子图间距和显示格式
-        plt.tight_layout()
-        plt.xticks(rotation=45)  # 如果时间标签重叠，可以旋转标签
-        # plt.show()
-        plt.savefig(figpath)
+        # # 调整子图间距和显示格式
+        # plt.tight_layout()
+        # plt.xticks(rotation=45)  # 如果时间标签重叠，可以旋转标签
+        # # plt.show()
+        # plt.savefig(figpath)
 
         return prob.solution.get_status(),prob.solution.get_objective_value(), solution_df
     except cplex.exceptions.CplexError as exc:
