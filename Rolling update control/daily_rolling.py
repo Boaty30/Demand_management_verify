@@ -40,7 +40,7 @@ class Rolling:
             Error = LoadReal - self.Pre[i]
             PMaxNew = (1 + (self.Alpha * Error) / LoadReal) * self.Pmax 
 
-            Threshold = PMaxNew * int(PMaxNew >= self.MonthMax) + self.MonthMax * int(PMaxNew < self.MonthMax)
+            Threshold = PMaxNew #* int(PMaxNew >= self.MonthMax) + self.MonthMax * int(PMaxNew < self.MonthMax)
             Delta = LoadReal - Threshold
             Output = LoadReal - self.battery(Delta)
             self.MonthMax = self.MonthMax * int(Output <= self.MonthMax) + Output * int(Output > self.MonthMax)
