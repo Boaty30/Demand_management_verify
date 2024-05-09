@@ -9,7 +9,7 @@
 - 针对月度、日度负荷曲线进行预测，实现算法落地
 - 提出其他基于工厂生产和储能实际的个性化控制策略
 - ...
-## Requirments
+## Requirements
 - Python 3.8（目前运行的conda环境处于该版本下）
 - pandas
 - matplotlib
