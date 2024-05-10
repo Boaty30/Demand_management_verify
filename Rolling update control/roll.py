@@ -8,10 +8,10 @@ file_path = 'Data\\xr_12_filtered.csv'
 data = pd.read_csv(file_path)
 
 r = Rolling()
-r.SimDays = 30
-r.Load = np.hstack([data[f'Day{i}'].values for i in range(2, 32)])
-r.Pre = np.hstack([data[f'Day{i}'].values for i in range(1, 31)])
-r.Alpha = 0.1
+r.SimDays = 31
+r.Load = np.hstack([data[f'Day{i}'].values for i in range(1, 32)])
+r.Pre = np.hstack([data[f'Day{i}'].values for i in range(0, 31)])
+r.Alpha = 0.2
 r.Pmax = 4400.0 
 r.BatMaxPow = 900.0
 r.BatMaxSto = 1800.0 
