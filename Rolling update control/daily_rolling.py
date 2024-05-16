@@ -1,16 +1,4 @@
-
-"""        
-self.SimDays = 
-self.Load = 
-self.Pre = 
-self.Alpha = 
-self.Pmax = 
-self.BatMaxPow = 
-self.BatMaxSto = 
-self.BatCurSto = 
-self.BatMinSto =
-"""
-
+import daily_pred as dpred
 
 class Rolling:
 
@@ -36,11 +24,12 @@ class Rolling:
     def main(self):
         for i in range(96 * self.SimDays):
 
+            self.Pmax = dpred.calculate_threshold(self.Pre)
             LoadReal = self.Load[i]
             Error = LoadReal - self.Pre[i]
             PMaxNew = (1 + (self.Alpha * Error) / LoadReal) * self.Pmax 
 
-            Threshold = PMaxNew #* int(PMaxNew >= self.MonthMax) + self.MonthMax * int(PMaxNew < self.MonthMax)
+            Threshold = PMaxNew * int(PMaxNew >= self.MonthMax) + self.MonthMax * int(PMaxNew < self.MonthMax)
             Delta = LoadReal - Threshold
             Output = LoadReal - self.battery(Delta)
             self.MonthMax = self.MonthMax * int(Output <= self.MonthMax) + Output * int(Output > self.MonthMax)
